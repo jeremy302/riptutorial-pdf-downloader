@@ -25,7 +25,7 @@ You can try out other options.
 + On the first run, the script gets a list of all available PDFs from the riptutorial server and saves them at `riptutorial/_list.json`. On subsequent runs, you would be prompted on whether the list should be gotten from the server or from the `_list.json` file.
 + When you add items to the download queue, the list of PDFs in the queue is saved at `riptutorial/_queue.json` so that in the case of an abrupt program exit or pc shutdown, the queue can be recovered. If any items were saved but not downloaded, you would be prompted at started on whether or not you want to load the saved queue.
 + The queue in `_queue.json` is saved by the PDF id which can change if the PDFs on the server's order change (maybe due to new PDFs added or old ones deleted), so if you decide to load the PDF list from the server, but choose to recover the queue, be sure to view the queue to verify that the right PDFs will be downloaded.
-+ Some PDF names start with a . (e.g ".net-core.pdf"), files/folders starting with a "." on unix systems are hidden, so said PDFs names are changed to start with an underscore: "_" (so ".net-core.pdf becones "_.net-core.pdf")
++ Some PDF names start with a . (e.g ".net-core.pdf"), files/folders starting with a "." on unix systems are hidden, so said PDFs names are changed to start with an underscore: "\_" (so ".net-core.pdf becones "_.net-core.pdf")
 
 ***
 #### Feature requests or bug reports are welcomed.

@@ -66,7 +66,7 @@ class PDF:
         filepath = "riptutorial/"+('_' if filename.startswith('.') else '') + filename
         if (not force) and os.path.exists(filepath):
             print("PDF file already exists.")
-            return 0
+            return True
         with open(filepath, "wb") as file:
             try:
                 pdf_response = session.get(get_url(self.pdf_link))
@@ -79,7 +79,7 @@ class PDF:
                 except: pass
                 return False
             file.write(pdf_response.content)
-            print("File download complete.");
+            print("PDF download complete.");
         return True
 
     def valid(self):
@@ -105,9 +105,11 @@ def get_all_pdfs():
 
     if not (response and response.ok):
         print("Failed to retrieve PDFs. Check your internet connection and try again.")
+        input("\nPress Enter to exit")
         exit(-1)
     elif not response.text:
         print("Server sent empty response. Try again later.")
+        input("\nPress Enter to exit")
         exit(-1)
 
     pdfs_html = response.text
@@ -131,16 +133,20 @@ def display_pdfs(pdfs=[], columns=2):
 
 
 def show_all():
+    print("There are a total of %d PDF(s)" %(len(pdfs)))
     display_pdfs(pdfs)
 
 
 def search():
-    query = input("Input part/all of the PDF name/id: ").strip().lower()
-    display_pdfs([pdf for pdf in pdfs
-                  if all(m in pdf.title.lower()+str(pdf.id) for m in query.split(' '))])
+    query = input("Input keywords/id to search for: ").strip().lower()
+    result = [pdf for pdf in pdfs
+                  if all(m in pdf.title.lower()+str(pdf.id) for m in query.split(' '))]
+    print("%d PDF(s) matched your search:"%(len(result)))
+    display_pdfs(result)
 
 
 def view_queue():
+    print("%d PDF(s) in queue: "%(len(queue)))
     display_pdfs(queue)
 
 
@@ -185,7 +191,7 @@ def remove_queue():
         print("These IDs were not in queue: %s" %
               (', '.join([str(v) for v in invalid_ids])))
 
-    print("%d ID(s) were removed from the queue" % (len(ids)-len(invalid_ids)))
+    print("%d PDF(s) were removed from the queue" % (len(ids)-len(invalid_ids)))
     save_queue()
 
 
@@ -202,10 +208,15 @@ def download():
         print("Downloading from: %s" % (get_url(pdf.pdf_link)))
 
         ok = pdf.download(not can_skip)
+        
         if not ok:
+            print("An error occured. Stopping download...")
             break
         else:
             queue.remove(pdf)
+            save_queue()
+    save_list()
+    print("Download Complete!")
 
 
 def show_options():
@@ -237,7 +248,6 @@ def show_options():
             exit(1)
         else:
             print("Invalid Command!\a")
-        print('\n')
 
 
 def save_list():
