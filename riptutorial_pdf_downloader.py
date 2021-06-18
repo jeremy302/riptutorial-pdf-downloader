@@ -36,7 +36,7 @@ class PDF:
         return f'{str_id} {title}'.ljust(width)
 
     def get_filename(self):
-        filename = self.title[0:self.title.rfind('(')]
+        filename = self.title[0:self.title.rfind('(')].strip()
         return filename+".pdf" if filename else self.title+".pdf"
 
     def get_pdf_link(self, force=False):
